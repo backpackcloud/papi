@@ -26,7 +26,7 @@ public interface ApiModel<E> {
   }
 
   default Response toResponse(int status) {
-    return Response.status(status).entity(status).build();
+    return Response.status(status).entity(data()).build();
   }
 
   static <E> ApiModel<E> from(E entity) {
