@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class CollectionModel<E> implements ApiCollectionModel<E> {
 
   @JsonProperty("values")
-  private final Collection<EntityModel<E>> values;
+  private final Collection<ApiModel<E>> values;
   @JsonProperty("_links")
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private final Map<String, ApiLink> links;
@@ -54,7 +54,7 @@ public class CollectionModel<E> implements ApiCollectionModel<E> {
 
   @Override
   public Collection<ApiModel<E>> values() {
-    return values();
+    return values;
   }
 
   @Override
