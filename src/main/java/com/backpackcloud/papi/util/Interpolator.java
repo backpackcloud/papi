@@ -10,12 +10,26 @@ import java.util.regex.Pattern;
 
 public class Interpolator implements Function<String, String> {
 
-  private static final Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{(?<name>\\w+)}");
+  public static final Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{(?<token>\\w+)}");
 
-  private final Object context;
+  public static final Function<String, Object> OBJECT_ELEMENT_RESOLVER(Object target) {
+    return name -> Elements.element(name)
+      .from(target)
+      .map(Element::getValue)
+      .map(Object::toString)
+      .orElseThrow(UnbelievableException::new);
+  }
+
+  private final Pattern patter;
+  private final Function<String, Object> tokenResolver;
 
   public Interpolator(Object context) {
-    this.context = context;
+    this(INTERPOLATION_PATTERN, OBJECT_ELEMENT_RESOLVER(context));
+  }
+
+  public Interpolator(Pattern patter, Function<String, Object> tokenResolver) {
+    this.patter = patter;
+    this.tokenResolver = tokenResolver;
   }
 
   @Override
@@ -23,15 +37,11 @@ public class Interpolator implements Function<String, String> {
     if (value == null || value.isBlank()) return null;
 
     StringBuilder result = new StringBuilder(value);
-    Matcher matcher = INTERPOLATION_PATTERN.matcher(result);
+    Matcher matcher = patter.matcher(result);
     while (matcher.find()) {
-      String elementValue = Elements.element(matcher.group("name"))
-        .from(context)
-        .map(Element::getValue)
-        .map(Object::toString)
-        .orElseThrow(UnbelievableException::new);
-      result.replace(matcher.start(), matcher.end(), elementValue);
-      matcher = INTERPOLATION_PATTERN.matcher(result);
+      Object tokenValue = tokenResolver.apply(matcher.group("token"));
+      result.replace(matcher.start(), matcher.end(), String.valueOf(tokenValue));
+      matcher = patter.matcher(result);
     }
     return result.toString();
   }
