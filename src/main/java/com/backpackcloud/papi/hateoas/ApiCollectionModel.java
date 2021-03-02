@@ -27,7 +27,7 @@ public interface ApiCollectionModel<E> {
   }
 
   default Response toResponse(int status) {
-    return Response.status(status).entity(values()).build();
+    return Response.status(status).entity(this).build();
   }
 
   static <E> ApiCollectionModel<E> from(Collection<E> values) {
