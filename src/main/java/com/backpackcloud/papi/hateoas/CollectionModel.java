@@ -13,12 +13,19 @@ public class CollectionModel<E> implements ApiCollectionModel<E> {
   @JsonProperty("_links")
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private final Map<String, ApiLink> links;
+  @JsonProperty("total")
+  private final Long total;
 
-  public CollectionModel(Collection<E> values) {
+  public CollectionModel(Collection<E> values, Long total) {
     this.values = values.stream()
       .map(EntityModel::new)
       .collect(Collectors.toList());
     this.links = new HashMap<>();
+    this.total = total;
+  }
+
+  public CollectionModel(Collection<E> values) {
+    this(values, null);
   }
 
   @Override

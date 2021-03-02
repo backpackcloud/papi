@@ -34,4 +34,8 @@ public interface ApiCollectionModel<E> {
     return new CollectionModel<E>(values);
   }
 
+  static <E> ApiCollectionModel<E> from(Collection<E> values, long total) {
+    return new CollectionModel<E>(values, total);
+  }
+
 }

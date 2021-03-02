@@ -34,8 +34,4 @@ public interface ApiModel<E> {
     return new EntityModel<>(entity);
   }
 
-  static <E> ApiCollectionModel<E> from(Collection<E> values) {
-    return new CollectionModel<>(values);
-  }
-
 }
