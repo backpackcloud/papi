@@ -1,20 +1,14 @@
 package com.backpackcloud.papi.hateoas;
 
-import com.backpackcloud.trugger.element.Element;
-import com.backpackcloud.trugger.element.Elements;
-import com.backpackcloud.zipper.UnbelievableException;
+import com.backpackcloud.papi.util.Interpolator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EntityModel<E> implements ApiModel<E> {
-
-  private static final Pattern PATH_PATTERN = Pattern.compile("\\{(?<name>\\w+)}");
 
   @JsonUnwrapped
   private final E entity;
@@ -28,20 +22,12 @@ public class EntityModel<E> implements ApiModel<E> {
 
   private void initializeLinks() {
     if (entity.getClass().isAnnotationPresent(Link.class)) {
+      Interpolator interpolator = new Interpolator(entity);
       Link[] declaredLinks = entity.getClass().getAnnotationsByType(Link.class);
+
       for (Link link : declaredLinks) {
-        StringBuilder uri = new StringBuilder(link.uri());
-        Matcher matcher = PATH_PATTERN.matcher(uri);
-        while (matcher.find()) {
-          String value = Elements.element(matcher.group("name"))
-              .from(entity)
-              .map(Element::getValue)
-              .map(Object::toString)
-              .orElseThrow(UnbelievableException::new);
-          uri.replace(matcher.start(), matcher.end(), value);
-        }
-        LinkMapper<ApiModel<E>> mapper = link(uri.toString());
-        if (!link.title().isBlank()) mapper.title(link.title());
+        LinkMapper<ApiModel<E>> mapper = link(interpolator.apply(link.uri()));
+        mapper.title(interpolator.apply(link.title()));
         mapper.to(link.rel());
       }
     }

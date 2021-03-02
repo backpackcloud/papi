@@ -2,6 +2,7 @@ package com.backpackcloud.papi.hateoas;
 
 import com.backpackcloud.zipper.UnbelievableException;
 
+import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 public interface ApiModel<E> {
@@ -18,6 +19,18 @@ public interface ApiModel<E> {
 
   default ApiLink selfLink() {
     return linkTo(Link.LinkTypes.SELF).orElseThrow(UnbelievableException::new);
+  }
+
+  default Response toResponse() {
+    return toResponse(200);
+  }
+
+  default Response toResponse(int status) {
+    return Response.status(status).entity(status).build();
+  }
+
+  static <E> ApiModel<E> from(E entity) {
+    return new EntityModel<>(entity);
   }
 
 }

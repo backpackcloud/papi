@@ -3,10 +3,7 @@ package com.backpackcloud.papi.hateoas;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CollectionModel<E> {
@@ -21,8 +18,8 @@ public class CollectionModel<E> {
 
   public CollectionModel(Collection<E> list, Long total) {
     this.list = list.stream()
-      .map(EntityModel::new)
-      .collect(Collectors.toList());
+        .map(EntityModel::new)
+        .collect(Collectors.toList());
     this.total = total;
     this.links = new HashMap<>();
   }
