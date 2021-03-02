@@ -26,11 +26,12 @@ public class Interpolator implements Function<String, String> {
     Matcher matcher = INTERPOLATION_PATTERN.matcher(result);
     while (matcher.find()) {
       String elementValue = Elements.element(matcher.group("name"))
-          .from(context)
-          .map(Element::getValue)
-          .map(Object::toString)
-          .orElseThrow(UnbelievableException::new);
+        .from(context)
+        .map(Element::getValue)
+        .map(Object::toString)
+        .orElseThrow(UnbelievableException::new);
       result.replace(matcher.start(), matcher.end(), elementValue);
+      matcher = INTERPOLATION_PATTERN.matcher(result);
     }
     return result.toString();
   }
