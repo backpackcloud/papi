@@ -6,34 +6,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CollectionModel<E> {
+public class CollectionModel<E> implements ApiCollectionModel<E> {
 
-  private final List<EntityModel<E>> list;
+  @JsonProperty("values")
+  private final Collection<EntityModel<E>> values;
+  @JsonProperty("_links")
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private final Map<String, ApiLink> links;
-  private final Long total;
 
-  public CollectionModel(Collection<E> list) {
-    this(list, null);
-  }
-
-  public CollectionModel(Collection<E> list, Long total) {
-    this.list = list.stream()
-        .map(EntityModel::new)
-        .collect(Collectors.toList());
-    this.total = total;
+  public CollectionModel(Collection<E> values) {
+    this.values = values.stream()
+      .map(EntityModel::new)
+      .collect(Collectors.toList());
     this.links = new HashMap<>();
   }
 
-  public LinkMapper<CollectionModel<E>> link(String uriFormat, Object... args) {
-    return link(String.format(uriFormat, args));
-  }
-
-  public LinkMapper<CollectionModel<E>> link(String uri) {
+  @Override
+  public LinkMapper<ApiCollectionModel<E>> link(String uri) {
     return new LinkMapper<>() {
       String title;
 
       @Override
-      public LinkMapper<CollectionModel<E>> title(String title) {
+      public LinkMapper<ApiCollectionModel<E>> title(String title) {
         this.title = title;
         return this;
       }
@@ -46,25 +40,19 @@ public class CollectionModel<E> {
     };
   }
 
-  @JsonProperty("count")
-  public int count() {
-    return list.size();
+  @JsonProperty("size")
+  public int size() {
+    return values.size();
   }
 
-  @JsonProperty("total")
-  public Long total() {
-    return total;
+  @Override
+  public Collection<ApiModel<E>> values() {
+    return values();
   }
 
-  @JsonProperty("list")
-  public List<EntityModel<E>> list() {
-    return list;
-  }
-
-  @JsonProperty("_links")
-  @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  public Map<String, ApiLink> links() {
-    return links;
+  @Override
+  public Optional<ApiLink> linkTo(String rel) {
+    return Optional.ofNullable(links.get(rel));
   }
 
 }
