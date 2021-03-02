@@ -21,15 +21,14 @@ public class EntityModel<E> implements ApiModel<E> {
   }
 
   private void initializeLinks() {
-    if (entity.getClass().isAnnotationPresent(Link.class)) {
-      Interpolator interpolator = new Interpolator(entity);
-      Link[] declaredLinks = entity.getClass().getAnnotationsByType(Link.class);
+    Link[] declaredLinks = entity.getClass().getAnnotationsByType(Link.class);
+    if (declaredLinks.length == 0) return;
 
-      for (Link link : declaredLinks) {
-        LinkMapper<ApiModel<E>> mapper = link(interpolator.apply(link.uri()));
-        mapper.title(interpolator.apply(link.title()));
-        mapper.to(link.rel());
-      }
+    Interpolator interpolator = new Interpolator(entity);
+    for (Link link : declaredLinks) {
+      LinkMapper<ApiModel<E>> mapper = link(interpolator.apply(link.uri()));
+      mapper.title(interpolator.apply(link.title()));
+      mapper.to(link.rel());
     }
   }
 
