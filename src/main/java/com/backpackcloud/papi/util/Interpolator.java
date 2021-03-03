@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class Interpolator implements Function<String, String> {
 
-  public static final Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{(?<token>\\w+)}");
+  public static final Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{(?<token>[^}]+)}");
 
   public static final Function<String, Object> OBJECT_ELEMENT_RESOLVER(Object target) {
     return name -> Elements.element(name)
