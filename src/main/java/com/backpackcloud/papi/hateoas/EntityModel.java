@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+
 public class EntityModel<E> implements ApiModel<E> {
 
   @JsonUnwrapped

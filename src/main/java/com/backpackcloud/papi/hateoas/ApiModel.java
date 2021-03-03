@@ -3,7 +3,6 @@ package com.backpackcloud.papi.hateoas;
 import com.backpackcloud.zipper.UnbelievableException;
 
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.Optional;
 
 public interface ApiModel<E> {
