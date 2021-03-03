@@ -8,6 +8,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Links {
 
-  Link[] value() default {};
+  Link[] value();
 
 }
