@@ -10,16 +10,6 @@ import java.util.regex.Pattern;
 
 public class Interpolator implements Function<String, String> {
 
-  public static final Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{(?<token>[^}]+)}");
-
-  public static final Function<String, Object> OBJECT_ELEMENT_RESOLVER(Object target) {
-    return name -> Elements.element(name)
-      .from(target)
-      .map(Element::getValue)
-      .map(Object::toString)
-      .orElseThrow(UnbelievableException::new);
-  }
-
   private final Pattern patter;
   private final Function<String, Object> tokenResolver;
 
@@ -27,8 +17,8 @@ public class Interpolator implements Function<String, String> {
     this(INTERPOLATION_PATTERN, OBJECT_ELEMENT_RESOLVER(context));
   }
 
-  public Interpolator(Pattern patter, Function<String, Object> tokenResolver) {
-    this.patter = patter;
+  public Interpolator(Pattern pattern, Function<String, Object> tokenResolver) {
+    this.patter = pattern;
     this.tokenResolver = tokenResolver;
   }
 
@@ -38,12 +28,24 @@ public class Interpolator implements Function<String, String> {
 
     StringBuilder result = new StringBuilder(value);
     Matcher matcher = patter.matcher(result);
+
     while (matcher.find()) {
       Object tokenValue = tokenResolver.apply(matcher.group("token"));
       result.replace(matcher.start(), matcher.end(), String.valueOf(tokenValue));
       matcher = patter.matcher(result);
     }
+
     return result.toString();
+  }
+
+  public static final Pattern INTERPOLATION_PATTERN = Pattern.compile("\\{(?<token>[^}]+)}");
+
+  public static Function<String, Object> OBJECT_ELEMENT_RESOLVER(Object target) {
+    return name -> Elements.element(name)
+      .from(target)
+      .map(Element::getValue)
+      .map(Object::toString)
+      .orElseThrow(UnbelievableException::new);
   }
 
 }

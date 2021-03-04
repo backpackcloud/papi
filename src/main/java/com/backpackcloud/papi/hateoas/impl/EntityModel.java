@@ -1,5 +1,9 @@
-package com.backpackcloud.papi.hateoas;
+package com.backpackcloud.papi.hateoas.impl;
 
+import com.backpackcloud.papi.hateoas.ApiLink;
+import com.backpackcloud.papi.hateoas.ApiModel;
+import com.backpackcloud.papi.hateoas.Link;
+import com.backpackcloud.papi.hateoas.LinkMapper;
 import com.backpackcloud.papi.util.Interpolator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;

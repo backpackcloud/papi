@@ -35,12 +35,7 @@ public class UnbelievableExceptionMapper implements ExceptionMapper<Unbelievable
 
   @Override
   public Response toResponse(UnbelievableException exception) {
-    int status;
-
-    if (exception.getCause() == null) status = 400;
-    else status = 500;
-
-    return Response.status(status).entity(exception.getMessage()).build();
+    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(exception.getMessage()).build();
   }
 
 }

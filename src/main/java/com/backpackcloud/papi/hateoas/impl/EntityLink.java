@@ -1,5 +1,6 @@
-package com.backpackcloud.papi.hateoas;
+package com.backpackcloud.papi.hateoas.impl;
 
+import com.backpackcloud.papi.hateoas.ApiLink;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import static com.backpackcloud.zipper.Configuration.configuration;
