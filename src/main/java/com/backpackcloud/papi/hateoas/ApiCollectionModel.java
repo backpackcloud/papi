@@ -19,7 +19,8 @@ public interface ApiCollectionModel<E> {
   }
 
   default Response toResponse() {
-    return toResponse(values().isEmpty() ? 404 : 200);
+    if (values().isEmpty()) return Response.status(404).build();
+    return toResponse(200);
   }
 
   default Response toResponse(int status) {
