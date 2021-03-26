@@ -18,6 +18,7 @@ public class CollectionModel<E> implements ApiCollectionModel<E> {
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private final Map<String, ApiLink> links;
   @JsonProperty("total")
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private final Long total;
 
   public CollectionModel(Collection<E> values, Long total) {
